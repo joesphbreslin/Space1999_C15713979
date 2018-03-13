@@ -3,50 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EagleSpawner : MonoBehaviour {
+
     GameObject leader;
     public float gap = 20;
     public float followers = 2;
     public GameObject prefab;
-    OffsetPursue op;
-
-    Vector3 offsetLeft = new Vector3(40, 0, 20);
-    Vector3 offsetRight = new Vector3(40, 0, -20);
     public GameObject seekTarget;
-    public float SpawnTime = 3f;
-    int waveCount = 1;
 
-    List<GameObject> boids = new List<GameObject>();
-    // Use this for initialization
-    void Awake () {
-        leader = GameObject.Instantiate(prefab);
-        leader.tag = "leader";
-        prefab.transform.position = this.transform.position;
-        Seek seek = leader.AddComponent<Seek>();
-        seek.targetGOBJ = seekTarget;
-        boids.Add(leader);
-        StartCoroutine(Wave(waveCount));
+	void Start () {
+        GameObject[] boids = new GameObject[7];
+
+		for(int i = 0; i < 7; i++)
+        {
+            boids[i] = GameObject.Instantiate(prefab);
+            boids[i].transform.rotation = transform.rotation;
+            if(i != 0)
+            {
+                boids[i].AddComponent<OffsetPursue>();
+            }
+            else
+            {
+                boids[i].transform.localPosition = transform.localPosition;
+                boids[i].AddComponent<Seek>();
+                boids[i].GetComponent<Seek>().targetGOBJ = seekTarget;
+            }
+        }     
+        boids[1].GetComponent<OffsetPursue>().leader = boids[0].GetComponent<Boid>();
+        boids[1].transform.localPosition = transform.localPosition + new Vector3(gap, 0, gap);
+        boids[2].GetComponent<OffsetPursue>().leader = boids[0].GetComponent<Boid>();
+        boids[2].transform.localPosition = transform.localPosition + new Vector3(gap, 0, -gap);
+
+        boids[3].GetComponent<OffsetPursue>().leader = boids[1].GetComponent<Boid>();
+        boids[3].transform.localPosition = boids[1].transform.localPosition + new Vector3(gap, 0, gap);
+        boids[4].GetComponent<OffsetPursue>().leader = boids[1].GetComponent<Boid>();
+        boids[4].transform.localPosition = boids[1].transform.localPosition + new Vector3(gap, 0, -gap);
+
+        boids[5].GetComponent<OffsetPursue>().leader = boids[1].GetComponent<Boid>();
+        boids[5].transform.localPosition = boids[2].transform.localPosition + new Vector3(gap, 0, gap);
+        boids[6].GetComponent<OffsetPursue>().leader = boids[1].GetComponent<Boid>();
+        boids[6].transform.localPosition = boids[2].transform.localPosition + new Vector3(gap, 0, -gap);
     }
-	
-
-    IEnumerator Wave(int count)
-    {
-        GameObject boid = GameObject.Instantiate(prefab);
-        op = boid.AddComponent<OffsetPursue>();
-        op.leader = leader.GetComponent<Boid>();
-        Vector3 leaderPos = leader.transform.position;
-        boid.transform.position = leaderPos + offsetLeft;
-        boids.Add(boid);
-    
-        GameObject boid2 = GameObject.Instantiate(prefab);
-        op = boid2.AddComponent<OffsetPursue>();
-        op.leader = leader.GetComponent<Boid>();
-        boid2.transform.position = leaderPos + offsetRight;
-        boids.Add(boid2);
-        yield return new WaitForSeconds(SpawnTime);
-
-    }
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
