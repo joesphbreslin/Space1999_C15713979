@@ -42,6 +42,7 @@ public class Boid : MonoBehaviour {
 
     void AccelerationSmoothing()
     {
+        
         Vector3 tempAcc = force / mass;
         float smoothRate = Mathf.Clamp(9.0f, 0.15f, 0.4f) / 2;
         acceleration = Vector3.Lerp(acceleration, tempAcc, smoothRate);
@@ -49,7 +50,7 @@ public class Boid : MonoBehaviour {
     void ApplyAccelerationToVelocity()
     {
         velocity += acceleration;  //TEST THIS MIGHT BE *
-        velocity = Vector3.ClampMagnitude(velocity, boid.maxSpeed);
+        velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
     }
 
     void ApplyLerpingAndLookAt()
