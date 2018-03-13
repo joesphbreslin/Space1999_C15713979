@@ -9,8 +9,8 @@ public class EagleSpawner : MonoBehaviour {
     public GameObject prefab;
     OffsetPursue op;
 
-    Vector3 offsetLeft = new Vector3(-40, 0, 20);
-    Vector3 offsetRight = new Vector3(-40, 0, -20);
+    Vector3 offsetLeft = new Vector3(40, 0, 20);
+    Vector3 offsetRight = new Vector3(40, 0, -20);
     public GameObject seekTarget;
     public float SpawnTime = 3f;
     int waveCount = 1;
@@ -40,7 +40,7 @@ public class EagleSpawner : MonoBehaviour {
         GameObject boid2 = GameObject.Instantiate(prefab);
         op = boid2.AddComponent<OffsetPursue>();
         op.leader = leader.GetComponent<Boid>();
-        boid.transform.position = leaderPos + offsetRight;
+        boid2.transform.position = leaderPos + offsetRight;
         boids.Add(boid2);
         yield return new WaitForSeconds(SpawnTime);
 
